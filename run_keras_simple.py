@@ -47,7 +47,7 @@ def load_train() -> Tuple[List[np.ndarray], List[int]]:
     print('Read train images')
     for j in range(10):
         print('Load folder c{}'.format(j))
-        path = os.path.join('..', 'input', 'imgs', 'train', 'c' + str(j), '*.jpg')
+        path = os.path.join(os.path.dirname(__file__), '..', 'input', 'imgs', 'train', 'c' + str(j), '*.jpg')
         files = glob.glob(path)
         for fl in files:
             img = get_im(fl)
@@ -64,7 +64,7 @@ def load_test() -> Tuple[List[np.ndarray], List[str]]:
     """
 
     print('Read test images')
-    path = os.path.join('..', 'input', 'imgs', 'test', '*.jpg')
+    path = os.path.join(os.path.dirname(__file__), '..', 'input', 'imgs', 'test', '*.jpg')
     files = glob.glob(path)
     x_test = []
     x_test_id = []
@@ -211,7 +211,7 @@ def get_simple_keras_solution() -> None:
 
     train_data = np.array(train_data, dtype=np.uint8)
     train_target = np.array(train_target, dtype=np.uint8)
-    train_data = train_data.reshape(train_data.shape[0], (1, img_rows, img_cols))
+    train_data = train_data.reshape(train_data.shape[0], 1, img_rows, img_cols)
     train_target = np_utils.to_categorical(train_target, nb_classes)
     train_data = train_data.astype('float32')
     train_data /= 255
@@ -272,7 +272,7 @@ def get_simple_keras_solution() -> None:
         (test_data, test_id) = restore_data(cache_path)
 
     test_data = np.array(test_data, dtype=np.uint8)
-    test_data = test_data.reshape(test_data.shape[0], (1, img_rows, img_cols))
+    test_data = test_data.reshape(test_data.shape[0], 1, img_rows, img_cols)
     test_data = test_data.astype('float32')
     test_data /= 255
     print('Test shape:', test_data.shape)
