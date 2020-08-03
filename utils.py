@@ -8,7 +8,7 @@ import math
 import cv2
 import datetime
 import pandas as pd
-from typing import List, Tuple
+from typing import Dict, List, Tuple, Iterable
 
 from sklearn.model_selection import train_test_split
 from keras import Model
@@ -135,6 +135,21 @@ def read_model() -> Model:
     return model
 
 
+def split_validation_set(train: np.ndarray, target: np.ndarray, test_size: float)\
+        -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """ Splits training data into training, validation and holdout data sets
+        Args:
+            train: Array of training data features
+            target: Array of training data target
+            test_size: Split ratio of validation and holdout data sets
+        Returns:
+            Training and Validation features and targets as arrays
+    """
+    random_state = 51
+    x_train, x_test, y_train, y_test = train_test_split(train, target, test_size=test_size, random_state=random_state)
+    return x_train, x_test, y_train, y_test
+
+
 def split_validation_set_with_hold_out(train: np.ndarray, target: np.ndarray, test_size: float)\
         -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """ Splits training data into training, validation and holdout data sets
@@ -152,7 +167,7 @@ def split_validation_set_with_hold_out(train: np.ndarray, target: np.ndarray, te
     return x_train, x_test, x_holdout, y_train, y_test, y_holdout
 
 
-def create_submission(predictions: np.ndarray, test_id: List[str], loss: float) -> None:
+def create_submission(predictions: Iterable, test_id: List[str], loss: float) -> None:
     """ Creates and stores a submission file from model predictions
         Args:
             predictions: Array of model predictions on test data
@@ -167,3 +182,10 @@ def create_submission(predictions: np.ndarray, test_id: List[str], loss: float) 
     suffix = str(round(loss, 6)) + '_' + str(now.strftime("%Y-%m-%d-%H-%M"))
     sub_file = os.path.join('subm', 'submission_' + suffix + '.csv')
     result1.to_csv(sub_file, index=False)
+
+
+def dict_to_list(d: Dict) -> List:
+    ret = []
+    for i in d.items():
+        ret.append(i[1])
+    return ret
