@@ -20,7 +20,7 @@ def read_and_normalize_train_data(img_rows: int, img_cols: int) -> Tuple[np.ndar
     """
     cache_path = os.path.join('cache', 'train_r_' + str(img_rows) + '_c_' + str(img_cols) + '.dat')
     if not os.path.isfile(cache_path):
-        train_data, train_target = load_train(img_rows, img_cols)
+        train_data, train_target, _, _ = load_train(img_rows, img_cols)
         cache_data((train_data, train_target), cache_path)
     else:
         print('Restore train from cache!')
@@ -60,21 +60,6 @@ def read_and_normalize_test_data(img_rows: int, img_cols: int) -> Tuple[np.ndarr
     print('Test shape:', test_data.shape)
     print(test_data.shape[0], 'test samples')
     return test_data, test_id
-
-
-def merge_several_folds_fast(data: List[float], n_folds: int) -> Iterable:
-    """ Function to merge different cross-validation fold predictions
-        Args:
-            data: Predictions from different cross-validation folds
-            n_folds: Number of cross-validation folds
-        Returns:
-            List of predictions from different cross-validation folds
-    """
-    a = np.array(data[0])
-    for i in range(1, n_folds):
-        a += np.array(data[i])
-    a /= n_folds
-    return a.tolist()
 
 
 def run_cross_validation(n_folds: int = 10) -> None:
@@ -131,9 +116,6 @@ def run_cross_validation(n_folds: int = 10) -> None:
 
         model.fit(x_train, y_train, batch_size=batch_size, nb_epoch=nb_epoch,
                   show_accuracy=True, verbose=1, validation_data=(x_valid, y_valid))
-
-        # score = model.evaluate(X_valid, Y_valid, show_accuracy=True, verbose=0)
-        # print('Score log_loss: ', score[0])
 
         predictions_valid = model.predict(x_valid, batch_size=128, verbose=1)
         score = log_loss(y_valid, predictions_valid)
