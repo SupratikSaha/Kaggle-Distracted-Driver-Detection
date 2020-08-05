@@ -8,22 +8,22 @@ from sklearn.metrics import log_loss
 from utils import *
 
 
-def read_and_normalize_train_data_color(img_rows: int, img_cols: int, use_cache: int,
+def read_and_normalize_train_data_color(img_rows: int, img_cols: int, use_cache: int = 0,
                                         color_type: int = 1) -> \
         Tuple[np.ndarray, np.ndarray, List[str], List[str]]:
     """ Function to read and normalize training images in color
         Args:
             img_rows: Row pixel dimension of images
             img_cols: Column pixel dimension of images
+            use_cache: Indicates if cache is to be used
             color_type: 1 indicates gray, else RGB
-            use_cache: Indicates if cache si to be used
         Returns:
             Normalized training data
     """
     cache_path = os.path.join('cache',
                               'train_r_' + str(img_rows) + '_c_' + str(img_cols) + '_t_' + str(color_type) + '.dat')
     if not os.path.isfile(cache_path) or use_cache == 0:
-        train_data, train_target, driver_id, unique_drivers = load_train(img_rows, img_cols, color_type)
+        train_data, train_target, _, driver_id, unique_drivers = load_train(img_rows, img_cols, color_type)
         cache_data((train_data, train_target, driver_id, unique_drivers), cache_path)
     else:
         print('Restore train from cache!')
@@ -44,14 +44,14 @@ def read_and_normalize_train_data_color(img_rows: int, img_cols: int, use_cache:
     return train_data, train_target, driver_id, unique_drivers
 
 
-def read_and_normalize_test_data_color(img_rows, img_cols, use_cache: int, color_type=1) -> \
+def read_and_normalize_test_data_color(img_rows: int, img_cols: int, use_cache: int = 0, color_type=1) -> \
         Tuple[np.ndarray, Union[List[str], np.ndarray]]:
     """ Function to read and normalize test data
         Args:
             img_rows: Row pixel dimension of images
             img_cols: Column pixel dimension of images
-            color_type: 1 indicates gray, else RGB
             use_cache: Indicates if cache si to be used
+            color_type: 1 indicates gray, else RGB
         Returns:
             Normalized test data
     """
@@ -75,34 +75,6 @@ def read_and_normalize_test_data_color(img_rows, img_cols, use_cache: int, color
     print(test_data.shape[0], 'test samples')
 
     return test_data, test_id
-
-
-def copy_selected_drivers(train_data: np.ndarray, train_target: np.ndarray,
-                          driver_id: List[str], driver_list: List[str]) -> \
-        Tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """ Function to copy data of selected drivers provided
-        Args:
-            train_data: Training data set
-            train_target: Target values of training data set
-            driver_id: Selected driver ids to be copied
-            driver_list: List of all driver ids
-        Returns:
-            Training data, target values and index positions of selected drivers
-    """
-    data = []
-    target = []
-    index = []
-
-    for i in range(len(driver_id)):
-        if driver_id[i] in driver_list:
-            data.append(train_data[i])
-            target.append(train_target[i])
-            index.append(i)
-    data = np.array(data, dtype=np.float32)
-    target = np.array(target, dtype=np.float32)
-    index = np.array(index, dtype=np.uint32)
-
-    return data, target, index
 
 
 def create_model_v1(img_rows: int, img_cols: int, color_type: int = 1) -> Sequential:
@@ -145,6 +117,8 @@ def create_model_v1(img_rows: int, img_cols: int, color_type: int = 1) -> Sequen
 
 def run_cross_validation_cv_drivers(n_folds: int = 10):
     """ Function to derive a keras solution with cross-validation for selected drivers
+        Args:
+            n_folds: Number of cross-validation folds
     """
     np.random.seed(2016)
     use_cache = 1

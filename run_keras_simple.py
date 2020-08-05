@@ -35,7 +35,7 @@ def get_simple_keras_solution() -> None:
     # Load training data
     cache_path = os.path.join(os.path.dirname(__file__), '..',  'cache', 'train.dat')
     if not os.path.isfile(cache_path):
-        train_data, train_target, _, _ = load_train(img_rows, img_cols)
+        train_data, train_target, _, _, _ = load_train(img_rows, img_cols)
         if not os.path.isdir('cache'):
             os.mkdir('cache')
         cache_data((train_data, train_target), cache_path)

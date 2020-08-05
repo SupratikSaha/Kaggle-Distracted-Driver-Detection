@@ -20,7 +20,7 @@ def read_and_normalize_train_data(img_rows: int, img_cols: int) -> Tuple[np.ndar
     """
     cache_path = os.path.join('cache', 'train_r_' + str(img_rows) + '_c_' + str(img_cols) + '.dat')
     if not os.path.isfile(cache_path):
-        train_data, train_target, _, _ = load_train(img_rows, img_cols)
+        train_data, train_target, _, _, _ = load_train(img_rows, img_cols)
         cache_data((train_data, train_target), cache_path)
     else:
         print('Restore train from cache!')
@@ -64,6 +64,8 @@ def read_and_normalize_test_data(img_rows: int, img_cols: int) -> Tuple[np.ndarr
 
 def run_cross_validation(n_folds: int = 10) -> None:
     """ Function to derive a keras solution with cross-validation
+        Args:
+            n_folds: Number of cross-validation folds
     """
     np.random.seed(2016)
 
