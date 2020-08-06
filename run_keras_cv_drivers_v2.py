@@ -1,8 +1,8 @@
+""" Code file to create a version 2 keras model using cross-validation """
+
 import warnings
 from typing import Union
-from shutil import copy2
 from sklearn.model_selection import KFold
-from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation, Flatten
 from keras.layers.convolutional import Convolution2D, MaxPooling2D
 from keras.optimizers import Adam
@@ -12,44 +12,15 @@ from sklearn.metrics import log_loss
 from utils import *
 
 
-def save_useful_data(predictions_valid: List[float], valid_ids: List[str], model: Sequential,
-                     info: str) -> None:
-    """ Saves model predictions, model and submission file
-        Args:
-            predictions_valid: Model predictions
-            valid_ids: Driver Ids predicted for
-            model: Model used to predict distracted drivers
-            info: Model loss or other info used to provide a specific name to the file
-                  for future reference
-    """
-    result1 = pd.DataFrame(predictions_valid, columns=['c0', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8', 'c9'])
-    result1.loc[:, 'img'] = pd.Series(valid_ids, index=result1.index)
-    now = datetime.datetime.now()
-    if not os.path.isdir(os.path.join('subm', 'data')):
-        os.mkdir(os.path.join('subm', 'data'))
-    suffix = info + '_' + str(now.strftime("%Y-%m-%d-%H-%M"))
-    # Save predictions
-    pred_file = os.path.join('subm', 'data', 's_' + suffix + '_train_predictions.csv')
-    result1.to_csv(pred_file, index=False)
-    # Save model
-    json_string = model.to_json()
-    model_file = os.path.join('subm', 'data', 's_' + suffix + '_model.json')
-    open(model_file, 'w').write(json_string)
-    # Save code
-    cur_code = os.path.realpath(__file__)
-    code_file = os.path.join('subm', 'data', 's_' + suffix + '_code.py')
-    copy2(cur_code, code_file)
-
-
 def read_and_normalize_train_data_rotated(img_rows: int, img_cols: int, use_cache: int = 0,
-                                          color_type: int = 1, ) -> \
+                                          color_type: int = 1) -> \
         Tuple[np.ndarray, np.ndarray, List[str], List[str], List[str]]:
     """ Function to read and normalize training images in color and rotated form
         Args:
             img_rows: Row pixel dimension of images
             img_cols: Column pixel dimension of images
-            use_cache: Indicates if cache is to be used
             color_type: 1 indicates gray, else RGB
+            use_cache: Indicates if cache is to be used
         Returns:
             Normalized and rotated training data
     """
@@ -144,21 +115,6 @@ def create_model_v2(img_rows: int, img_cols: int, color_type: int = 1) -> Sequen
     model.compile(Adam(lr=1e-3), loss='categorical_crossentropy')
 
     return model
-
-
-def get_validation_predictions(train_data: np.ndarray, predictions_valid: Dict[int, float]) -> List[float]:
-    """ Appends the predictions into a list
-        Args:
-            train_data: Training data set
-            predictions_valid: Predictions for valid drivers
-        Returns:
-            Predictions for valid drivers as a list
-    """
-    pv = []
-    for i in range(len(train_data)):
-        pv.append(predictions_valid[i])
-
-    return pv
 
 
 def run_cross_validation_v2(n_folds: int = 10) -> None:

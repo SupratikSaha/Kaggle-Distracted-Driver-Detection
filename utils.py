@@ -11,10 +11,10 @@ import cv2
 import datetime
 import pandas as pd
 from typing import Any, Dict, List, Tuple, Iterable
-
+from shutil import copy2
 from sklearn.model_selection import train_test_split
 from keras import Model
-from keras.models import model_from_json
+from keras.models import model_from_json, Sequential
 
 
 # color_type = 1 - gray
@@ -97,10 +97,7 @@ def load_train(img_rows: int, img_cols: int, color_type=1, mode='norm') -> \
         files = glob.glob(path)
         for fl in files:
             fl_base = os.path.basename(fl)
-            if mode == 'norm':
-                img = get_im(fl, img_rows, img_cols, color_type)
-            else:
-                img = get_im(fl, img_rows, img_cols, color_type, 'mod')
+            img = get_im(fl, img_rows, img_cols, color_type, mode)
             x_train.append(img)
             x_train_id.append(fl_base)
             y_train.append(j)
@@ -134,10 +131,7 @@ def load_test(img_rows: int, img_cols: int, color_type=1, mode='norm') -> Tuple[
     thr = math.floor(len(files) / 10)
     for fl in files:
         fl_base = os.path.basename(fl)
-        if mode == 'norm':
-            img = get_im(fl, img_rows, img_cols, color_type)
-        else:
-            img = get_im(fl, img_rows, img_cols, color_type, 'mod')
+        img = get_im(fl, img_rows, img_cols, color_type, mode)
         x_test.append(img)
         x_test_id.append(fl_base)
         total += 1
@@ -145,6 +139,35 @@ def load_test(img_rows: int, img_cols: int, color_type=1, mode='norm') -> Tuple[
             print('Read {} images from {}'.format(total, len(files)))
 
     print('Read test data time: {} seconds'.format(round(time.time() - start_time, 2)))
+
+    return x_test, x_test_id
+
+
+def load_test_vgg(part: int, img_rows: int, img_cols: int, color_type=1, mode='norm') \
+        -> Tuple[List[np.ndarray], List[str]]:
+    """ Loads test data images into specified folder as file glob
+        Args:
+            part: Partition number of test data
+            img_rows: Row pixel dimension of images
+            img_cols: Column pixel dimension of images
+            color_type: 1 indicates gray, else RGB
+            mode: Mode of loading test data
+        Returns:
+            Tuple of resized images and image name
+    """
+    path = os.path.join('..', 'input', 'test', '*.jpg')
+    files = sorted(glob.glob(path))
+    ch = split_list(files, 5)
+
+    x_test = []
+    x_test_id = []
+    print('Start image: ' + str(ch[part][0]))
+    print('Last image: ' + str(ch[part][-1]))
+    for fl in ch[part]:
+        fl_base = os.path.basename(fl)
+        img = get_im(fl, img_rows, img_cols, color_type, mode)
+        x_test.append(img)
+        x_test_id.append(fl_base)
 
     return x_test, x_test_id
 
@@ -178,12 +201,14 @@ def restore_data(path: str) -> Any:
     return data
 
 
-def save_model(model: Model, arch_path: str = None, weights_path: str = None) -> None:
+def save_model(model: Model, arch_path: str = None, weights_path: str = None,
+               file_name_suffix: str = '') -> None:
     """ Saves model as JSON file in the specified path
         Args:
             model: Trained keras model to be saved
             arch_path: Path of architecture file
             weights_path: Path of weights files
+            file_name_suffix: Optional file name suffix
     """
     json_string = model.to_json()
     if not os.path.isdir('cache'):
@@ -192,8 +217,8 @@ def save_model(model: Model, arch_path: str = None, weights_path: str = None) ->
         open(arch_path, 'w').write(json_string)
         model.save_weights(weights_path, overwrite=True)
     else:
-        open(os.path.join('cache', 'architecture.json'), 'w').write(json_string)
-        model.save_weights(os.path.join('cache', 'model_weights.h5'), overwrite=True)
+        open(os.path.join('cache', 'architecture' + file_name_suffix + '.json'), 'w').write(json_string)
+        model.save_weights(os.path.join('cache', 'model_weights' + file_name_suffix + '.h5'), overwrite=True)
 
 
 def read_model(arch_path: str = None, weights_path: str = None) -> Model:
@@ -295,6 +320,7 @@ def merge_several_folds_fast(data: List[float], n_folds: int) -> Iterable:
     for i in range(1, n_folds):
         a += np.array(data[i])
     a /= n_folds
+
     return a.tolist()
 
 
@@ -351,3 +377,88 @@ def copy_selected_drivers(train_data: np.ndarray, train_target: np.ndarray,
     index = np.array(index, dtype=np.uint32)
 
     return data, target, index
+
+
+def save_useful_data(predictions_valid: List[float], valid_ids: List[str], model: Sequential,
+                     info: str) -> None:
+    """ Saves model predictions, model and submission file
+        Args:
+            predictions_valid: Model predictions
+            valid_ids: Driver Ids predicted for
+            model: Model used to predict distracted drivers
+            info: Model loss or other info used to provide a specific name to the file
+                  for future reference
+    """
+    result1 = pd.DataFrame(predictions_valid, columns=['c0', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8', 'c9'])
+    result1.loc[:, 'img'] = pd.Series(valid_ids, index=result1.index)
+    now = datetime.datetime.now()
+    if not os.path.isdir(os.path.join('subm', 'data')):
+        os.mkdir(os.path.join('subm', 'data'))
+    suffix = info + '_' + str(now.strftime("%Y-%m-%d-%H-%M"))
+    # Save predictions
+    pred_file = os.path.join('subm', 'data', 's_' + suffix + '_train_predictions.csv')
+    result1.to_csv(pred_file, index=False)
+    # Save model
+    json_string = model.to_json()
+    model_file = os.path.join('subm', 'data', 's_' + suffix + '_model.json')
+    open(model_file, 'w').write(json_string)
+    # Save code
+    cur_code = os.path.realpath(__file__)
+    code_file = os.path.join('subm', 'data', 's_' + suffix + '_code.py')
+    copy2(cur_code, code_file)
+
+
+def get_validation_predictions(train_data: np.ndarray, predictions_valid: Dict[int, float]) -> List[float]:
+    """ Appends the predictions into a list
+        Args:
+            train_data: Training data set
+            predictions_valid: Predictions for valid drivers
+        Returns:
+            Predictions for valid drivers as a list
+    """
+    pv = []
+    for i in range(len(train_data)):
+        pv.append(predictions_valid[i])
+
+    return pv
+
+
+def append_chunk(main: List[Any], part: List[Any]) -> List[Any]:
+    """ Add the components of a split list to a main list
+        Args:
+            main: Main list
+            part: A split list
+        Returns:
+            Appended main list
+    """
+    for p in part:
+        main.append(p)
+
+    return main
+
+
+def split_list(lst: List[str], wanted_parts: int = 1) -> List[List[str]]:
+    """ Splits a list into a list of lists of each of size 'wanted_parts'
+        Args:
+            lst: List to be split into smaller parts
+            wanted_parts: Desired size of each smaller list
+        Returns:
+            A list of lists of each of size 'wanted_parts'
+    """
+    length = len(lst)
+
+    return [lst[i * length // wanted_parts: (i + 1) * length // wanted_parts] for i in range(wanted_parts)]
+
+
+def normalize_image(img: np.ndarray) -> np.ndarray:
+    """ Normalizes an input image
+        Args:
+            img: Input image
+        Returns:
+            Normalized Image
+    """
+    img[:, :, 0] -= 103.939
+    img[:, :, 1] -= 116.779
+    img[:, :, 2] -= 123.68
+
+    return img

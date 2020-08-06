@@ -1,6 +1,7 @@
+""" Code file to create a keras model using cross-validation """
+
 from typing import Union
 from sklearn.model_selection import KFold
-from keras.models import Sequential
 from keras.layers.core import Dense, Dropout, Activation, Flatten
 from keras.layers.convolutional import Convolution2D, MaxPooling2D
 from keras.utils import np_utils
