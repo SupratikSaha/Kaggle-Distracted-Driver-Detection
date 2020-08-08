@@ -136,4 +136,4 @@ def run_cross_validation(n_folds: int = 10) -> None:
     print('Final score log_loss: ', score)
 
     test_res = merge_several_folds_fast(y_full_test, n_folds)
-    create_submission(test_res, test_id, score)
+    create_submission(test_res, test_id, 'keras_cv')

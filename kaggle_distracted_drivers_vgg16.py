@@ -267,11 +267,11 @@ def run_cross_validation_create_models(n_folds: int = 10) -> None:
     predictions_valid = get_validation_predictions(train_data, y_full_train)
 
     print('Final log_loss: {}, n_folds: {} epoch: {}'.format(score, n_folds, nb_epoch))
-    info_string = 'loss_' + str(score) \
-                  + '_folds_' + str(n_folds) \
-                  + '_ep_' + str(nb_epoch)
+    # info_string = 'loss_' + str(score) \
+    #               + '_folds_' + str(n_folds) \
+    #               + '_ep_' + str(nb_epoch)
 
-    save_useful_data(predictions_valid, train_id, model, info_string)
+    save_useful_data(predictions_valid, train_id, model, 'vgg_16')
 
     score1 = log_loss(train_target, predictions_valid)
     if abs(score1 - score) > 0.0001:
@@ -324,15 +324,15 @@ def run_cross_validation_process_test(n_folds: int = 10) -> None:
         y_full_test.append(test_prediction)
 
     test_res = merge_several_folds_fast(y_full_test, n_folds)
-    info_string = 'loss_' \
-                  + '_r_' + str(224) \
-                  + '_c_' + str(224) \
-                  + '_folds_' + str(n_folds)
-    suffix = info_string + '_' + str(datetime.datetime.now().strftime("%Y-%m-%d-%H-%M"))
+    # info_string = 'loss_' \
+    #               + '_r_' + str(224) \
+    #               + '_c_' + str(224) \
+    #               + '_folds_' + str(n_folds)
+    suffix = 'vgg_16' + '_' + str(datetime.datetime.now().strftime("%Y-%m-%d-%H-%M"))
     cache_data((y_full_test, test_id), os.path.join(os.path.dirname(__file__), '..', "subm",
                                                     "full_array_" + suffix + ".pickle.dat"))
-    create_submission(test_res, test_id, info_string)
+    create_submission(test_res, test_id, 'vgg_16')
     # Store debug submissions
     for i in range(n_folds):
-        info_string1 = info_string + '_debug_' + str(i)
+        info_string1 = 'vgg_16' + '_debug_' + str(i)
         create_submission(y_full_test[i], test_id, info_string1)

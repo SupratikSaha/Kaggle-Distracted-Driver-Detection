@@ -176,11 +176,11 @@ def run_cross_validation_cv_drivers(n_folds: int = 10):
     print('Final log_loss: {}, rows: {} cols: {} n_folds: {} epoch: {}'.format(score, img_rows,
                                                                                img_cols, n_folds,
                                                                                nb_epoch))
-    info_string = 'loss_' + str(score) \
-                  + '_r_' + str(img_rows) \
-                  + '_c_' + str(img_cols) \
-                  + '_folds_' + str(n_folds) \
-                  + '_ep_' + str(nb_epoch)
+    # info_string = 'loss_' + str(score) \
+    #               + '_r_' + str(img_rows) \
+    #               + '_c_' + str(img_cols) \
+    #               + '_folds_' + str(n_folds) \
+    #               + '_ep_' + str(nb_epoch)
 
     test_res = merge_several_folds_fast(y_full_test, n_folds)
-    create_submission(test_res, test_id, info_string)
+    create_submission(test_res, test_id, 'keras_cv_drivers')
