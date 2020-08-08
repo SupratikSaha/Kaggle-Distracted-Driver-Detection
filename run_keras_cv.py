@@ -17,7 +17,8 @@ def read_and_normalize_train_data(img_rows: int, img_cols: int) -> Tuple[np.ndar
         Returns:
             Normalized training data
     """
-    cache_path = os.path.join('cache', 'train_r_' + str(img_rows) + '_c_' + str(img_cols) + '.dat')
+    cache_path = os.path.join(os.path.dirname(__file__), '..', 'cache', 'train_r_' +
+                              str(img_rows) + '_c_' + str(img_cols) + '.dat')
     if not os.path.isfile(cache_path):
         train_data, train_target, _, _, _ = load_train(img_rows, img_cols)
         cache_data((train_data, train_target), cache_path)
@@ -44,7 +45,8 @@ def read_and_normalize_test_data(img_rows: int, img_cols: int) -> Tuple[np.ndarr
         Returns:
             Normalized test data
     """
-    cache_path = os.path.join('cache', 'test_r_' + str(img_rows) + '_c_' + str(img_cols) + '.dat')
+    cache_path = os.path.join(os.path.dirname(__file__), '..', 'cache', 'test_r_' +
+                              str(img_rows) + '_c_' + str(img_cols) + '.dat')
     if not os.path.isfile(cache_path):
         test_data, test_id = load_test(img_rows, img_cols)
         cache_data((test_data, test_id), cache_path)

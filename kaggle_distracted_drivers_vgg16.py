@@ -25,8 +25,8 @@ def read_and_normalize_train_data(img_rows: int, img_cols: int, use_cache: int =
             Returns:
                 Normalized and rotated training data
         """
-    cache_path = os.path.join(
-        'cache', 'train_r_' + str(img_rows) + '_c_' + str(img_cols) + '_t_' + str(color_type) + '.dat')
+    cache_path = os.path.join(os.path.dirname(__file__), '..', 'cache', 'train_r_' +
+                              str(img_rows) + '_c_' + str(img_cols) + '_t_' + str(color_type) + '.dat')
     if not os.path.isfile(cache_path) or use_cache == 0:
         train_data, train_target, train_id, driver_id, unique_drivers = \
             load_train(img_rows, img_cols, color_type, 'cv2')
@@ -79,7 +79,7 @@ def read_and_normalize_test_data(part: int, img_rows: int, img_cols: int, use_ca
                     Normalized and rotated test data
             """
     start_time = time.time()
-    cache_path = os.path.join('cache', 'test_r_' + str(img_rows) +
+    cache_path = os.path.join(os.path.dirname(__file__), '..', 'cache', 'test_r_' + str(img_rows) +
                               '_c_' + str(img_cols) +
                               '_part_' + str(part) +
                               '.dat')
@@ -238,7 +238,8 @@ def run_cross_validation_create_models(n_folds: int = 10) -> None:
         print('Train drivers: ', unique_list_train)
         print('Test drivers: ', unique_list_valid)
 
-        k_fold_weights_path = os.path.join('cache', 'weights_k_fold_vgg16_' + str(num_fold) + '.h5')
+        k_fold_weights_path = os.path.join(os.path.dirname(__file__), '..', 'cache',
+                                           'weights_k_fold_vgg16_' + str(num_fold) + '.h5')
         if not os.path.isfile(k_fold_weights_path) or restore_from_last_checkpoint == 0:
             callbacks = [
                 EarlyStoppingByLossVal(monitor='val_loss', value=0.00001, verbose=1),
@@ -293,11 +294,14 @@ def run_cross_validation_process_test(n_folds: int = 10) -> None:
         model = vgg_16()
         num_fold += 1
         print('Start KFold number {} from {}'.format(num_fold, n_folds))
-        k_fold_weights_path = os.path.join('cache', 'weights_k_fold_vgg16_' + str(num_fold) + '.h5')
+        k_fold_weights_path = os.path.join(os.path.dirname(__file__), '..', 'cache',
+                                           'weights_k_fold_vgg16_' + str(num_fold) + '.h5')
         model.load_weights(k_fold_weights_path)
 
-        k_fold_test_validation_path = os.path.join('cache', 'test_k_fold_vgg16_' + str(num_fold) + '.pickle.dat')
-        k_fold_test_ids_path = os.path.join('cache', 'test_k_fold_vgg16_ids.pickle.dat')
+        k_fold_test_validation_path = os.path.join(os.path.dirname(__file__), '..', 'cache',
+                                                   'test_k_fold_vgg16_' + str(num_fold) + '.pickle.dat')
+        k_fold_test_ids_path = os.path.join(os.path.dirname(__file__), '..', 'cache',
+                                            'test_k_fold_vgg16_ids.pickle.dat')
         if not os.path.isfile(k_fold_test_validation_path):
             test_prediction = []
             for part in range(5):
@@ -325,7 +329,8 @@ def run_cross_validation_process_test(n_folds: int = 10) -> None:
                   + '_c_' + str(224) \
                   + '_folds_' + str(n_folds)
     suffix = info_string + '_' + str(datetime.datetime.now().strftime("%Y-%m-%d-%H-%M"))
-    cache_data((y_full_test, test_id), os.path.join("subm", "full_array_" + suffix + ".pickle.dat"))
+    cache_data((y_full_test, test_id), os.path.join(os.path.dirname(__file__), '..', "subm",
+                                                    "full_array_" + suffix + ".pickle.dat"))
     create_submission(test_res, test_id, info_string)
     # Store debug submissions
     for i in range(n_folds):

@@ -21,8 +21,8 @@ def read_and_normalize_train_data_color(img_rows: int, img_cols: int, use_cache:
         Returns:
             Normalized training data
     """
-    cache_path = os.path.join('cache',
-                              'train_r_' + str(img_rows) + '_c_' + str(img_cols) + '_t_' + str(color_type) + '.dat')
+    cache_path = os.path.join(os.path.dirname(__file__), '..', 'cache', 'train_r_' +
+                              str(img_rows) + '_c_' + str(img_cols) + '_t_' + str(color_type) + '.dat')
     if not os.path.isfile(cache_path) or use_cache == 0:
         train_data, train_target, _, driver_id, unique_drivers = load_train(img_rows, img_cols, color_type)
         cache_data((train_data, train_target, driver_id, unique_drivers), cache_path)
@@ -56,8 +56,8 @@ def read_and_normalize_test_data_color(img_rows: int, img_cols: int, use_cache: 
         Returns:
             Normalized test data
     """
-    cache_path = os.path.join('cache',
-                              'test_r_' + str(img_rows) + '_c_' + str(img_cols) + '_t_' + str(color_type) + '.dat')
+    cache_path = os.path.join(os.path.dirname(__file__), '..', 'cache', 'test_r_' +
+                              str(img_rows) + '_c_' + str(img_cols) + '_t_' + str(color_type) + '.dat')
     if not os.path.isfile(cache_path) or use_cache == 0:
         test_data, test_id = load_test(img_rows, img_cols, color_type)
         cache_data((test_data, test_id), cache_path)

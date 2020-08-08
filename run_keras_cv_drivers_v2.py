@@ -24,8 +24,8 @@ def read_and_normalize_train_data_rotated(img_rows: int, img_cols: int, use_cach
         Returns:
             Normalized and rotated training data
     """
-    cache_path = os.path.join(
-        'cache', 'train_r_' + str(img_rows) + '_c_' + str(img_cols) + '_t_' + str(color_type) + '_rotated.dat')
+    cache_path = os.path.join(os.path.dirname(__file__), '..', 'cache', 'train_r_' +
+                              str(img_rows) + '_c_' + str(img_cols) + '_t_' + str(color_type) + '_rotated.dat')
     if not os.path.isfile(cache_path) or use_cache == 0:
         train_data, train_target, train_id, driver_id, unique_drivers = \
             load_train(img_rows, img_cols, color_type, 'mod')
@@ -63,8 +63,8 @@ def read_and_normalize_test_data_rotated(img_rows: int, img_cols: int, use_cache
             Returns:
                 Normalized and rotated test data
         """
-    cache_path = os.path.join(
-        'cache', 'test_r_' + str(img_rows) + '_c_' + str(img_cols) + '_t_' + str(color_type) + '_rotated.dat')
+    cache_path = os.path.join(os.path.dirname(__file__), '..', 'cache', 'test_r_' +
+                              str(img_rows) + '_c_' + str(img_cols) + '_t_' + str(color_type) + '_rotated.dat')
     if not os.path.isfile(cache_path) or use_cache == 0:
         test_data, test_id = load_test(img_rows, img_cols, color_type, 'mod')
         cache_data((test_data, test_id), cache_path)
@@ -160,7 +160,8 @@ def run_cross_validation_v2(n_folds: int = 10) -> None:
         print('Train drivers: ', unique_list_train)
         print('Test drivers: ', unique_list_valid)
 
-        k_fold_weights_path = os.path.join('cache', 'weights_k_fold_' + str(num_fold) + '.h5')
+        k_fold_weights_path = os.path.join(os.path.dirname(__file__), '..', 'cache',
+                                           'weights_k_fold_' + str(num_fold) + '.h5')
         if not os.path.isfile(k_fold_weights_path) or restore_from_last_checkpoint == 0:
             callbacks = [
                 EarlyStopping(monitor='val_loss', patience=1, verbose=0),

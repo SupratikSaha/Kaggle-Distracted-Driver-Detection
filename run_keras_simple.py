@@ -69,7 +69,9 @@ def get_simple_keras_solution() -> None:
     print('Split valid: ', len(x_test))
     print('Split holdout: ', len(x_holdout))
 
-    model_from_cache = 0
+    cache_path = os.path.join(os.path.dirname(__file__), '..', 'cache', 'model_weights.h5')
+    model_from_cache = 0 if not os.path.isfile(cache_path) else 1
+
     if model_from_cache == 1:
         model = read_model()
         model.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=['accuracy'])

@@ -155,7 +155,7 @@ def load_test_vgg(part: int, img_rows: int, img_cols: int, color_type=1, mode='n
         Returns:
             Tuple of resized images and image name
     """
-    path = os.path.join('..', 'input', 'test', '*.jpg')
+    path = os.path.join(os.path.dirname(__file__), '..', 'input', 'test', '*.jpg')
     files = sorted(glob.glob(path))
     ch = split_list(files, 5)
 
@@ -289,11 +289,8 @@ def create_submission(predictions: Iterable, test_id: List[str], info: Any) -> N
     now = datetime.datetime.now()
     if not os.path.isdir('subm'):
         os.mkdir('subm')
-    if isinstance(info, float):
-        suffix = info + '_' + str(now.strftime("%Y-%m-%d-%H-%M"))
-    else:
-        suffix = info + '_' + str(now.strftime("%Y-%m-%d-%H-%M"))
-    sub_file = os.path.join('subm', 'submission_' + suffix + '.csv')
+    suffix = info + '_' + str(now.strftime("%Y-%m-%d-%H-%M"))
+    sub_file = os.path.join(os.path.dirname(__file__), '..', 'subm', 'submission_' + suffix + '.csv')
     result1.to_csv(sub_file, index=False)
 
 
@@ -395,15 +392,15 @@ def save_useful_data(predictions_valid: List[float], valid_ids: List[str], model
     result1 = pd.DataFrame(predictions_valid, columns=['c0', 'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8', 'c9'])
     result1.loc[:, 'img'] = pd.Series(valid_ids, index=result1.index)
     now = datetime.datetime.now()
-    if not os.path.isdir(os.path.join('subm', 'data')):
-        os.mkdir(os.path.join('subm', 'data'))
+    if not os.path.isdir(os.path.join(os.path.dirname(__file__), '..', 'subm', 'data')):
+        os.mkdir(os.path.join(os.path.dirname(__file__), '..', 'subm', 'data'))
     suffix = info + '_' + str(now.strftime("%Y-%m-%d-%H-%M"))
     # Save predictions
-    pred_file = os.path.join('subm', 'data', 's_' + suffix + '_train_predictions.csv')
+    pred_file = os.path.join(os.path.dirname(__file__), '..', 'subm', 'data', 's_' + suffix + '_train_predictions.csv')
     result1.to_csv(pred_file, index=False)
     # Save model
     json_string = model.to_json()
-    model_file = os.path.join('subm', 'data', 's_' + suffix + '_model.json')
+    model_file = os.path.join(os.path.dirname(__file__), '..', 'subm', 'data', 's_' + suffix + '_model.json')
     open(model_file, 'w').write(json_string)
     # Save code
     cur_code = os.path.realpath(__file__)
