@@ -53,7 +53,7 @@ def get_driver_data() -> Tuple[Dict[str, str], Dict[str, List[Tuple[str, str]]]]
     """ Returns a dictionary of image name mapped to subject"""
     dr = dict()
     clss = dict()
-    path = os.path.join('..', 'input', 'driver_imgs_list.csv')
+    path = os.path.join(os.path.dirname(__file__), '..', 'input', 'driver_imgs_list.csv')
     print('Read drivers data')
     f = open(path, 'r')
     f.readline()
@@ -217,8 +217,10 @@ def save_model(model: Model, arch_path: str = None, weights_path: str = None,
         open(arch_path, 'w').write(json_string)
         model.save_weights(weights_path, overwrite=True)
     else:
-        open(os.path.join('cache', 'architecture' + file_name_suffix + '.json'), 'w').write(json_string)
-        model.save_weights(os.path.join('cache', 'model_weights' + file_name_suffix + '.h5'), overwrite=True)
+        open(os.path.join(os.path.dirname(__file__), '..', 'cache',
+                          'architecture' + file_name_suffix + '.json'), 'w').write(json_string)
+        model.save_weights(os.path.join(os.path.dirname(__file__), '..', 'cache',
+                                        'model_weights' + file_name_suffix + '.h5'), overwrite=True)
 
 
 def read_model(arch_path: str = None, weights_path: str = None) -> Model:
@@ -233,8 +235,9 @@ def read_model(arch_path: str = None, weights_path: str = None) -> Model:
         model = model_from_json(open(arch_path).read())
         model.load_weights(weights_path)
     else:
-        model = model_from_json(open(os.path.join('cache', 'architecture.json')).read())
-        model.load_weights(os.path.join('cache', 'model_weights.h5'))
+        model = model_from_json(open(os.path.join(os.path.dirname(__file__), '..', 'cache',
+                                                  'architecture.json')).read())
+        model.load_weights(os.path.join(os.path.dirname(__file__), '..', 'cache', 'model_weights.h5'))
 
     return model
 
@@ -287,7 +290,7 @@ def create_submission(predictions: Iterable, test_id: List[str], info: Any) -> N
     if not os.path.isdir('subm'):
         os.mkdir('subm')
     if isinstance(info, float):
-        suffix = str(round(info, 6)) + '_' + str(now.strftime("%Y-%m-%d-%H-%M"))
+        suffix = info + '_' + str(now.strftime("%Y-%m-%d-%H-%M"))
     else:
         suffix = info + '_' + str(now.strftime("%Y-%m-%d-%H-%M"))
     sub_file = os.path.join('subm', 'submission_' + suffix + '.csv')

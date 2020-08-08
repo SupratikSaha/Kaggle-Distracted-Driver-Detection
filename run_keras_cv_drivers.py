@@ -111,7 +111,7 @@ def create_model_v1(img_rows: int, img_cols: int, color_type: int = 1) -> Sequen
     model.add(Dense(nb_classes))
     model.add(Activation('softmax'))
 
-    model.compile(loss='categorical_crossentropy', optimizer='adadelta')
+    model.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=['accuracy'])
 
     return model
 
@@ -155,7 +155,7 @@ def run_cross_validation_cv_drivers(n_folds: int = 10):
 
         model = create_model_v1(img_rows, img_cols, color_type_global)
         model.fit(x_train, y_train, batch_size=batch_size, nb_epoch=nb_epoch,
-                  show_accuracy=True, verbose=1, validation_data=(x_valid, y_valid))
+                  verbose=1, validation_data=(x_valid, y_valid))
 
         # score = model.evaluate(X_valid, Y_valid, show_accuracy=True, verbose=0)
         # print('Score log_loss: ', score[0])

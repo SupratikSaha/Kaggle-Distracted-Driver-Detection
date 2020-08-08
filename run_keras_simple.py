@@ -32,7 +32,7 @@ def get_simple_keras_solution() -> None:
     img_rows, img_cols = 96, 128
 
     # Load training data
-    cache_path = os.path.join(os.path.dirname(__file__), '..',  'cache', 'train.dat')
+    cache_path = os.path.join(os.path.dirname(__file__), '..', 'cache', 'train.dat')
     if not os.path.isfile(cache_path):
         train_data, train_target, _, _, _ = load_train(img_rows, img_cols)
         if not os.path.isdir('cache'):
@@ -98,7 +98,7 @@ def get_simple_keras_solution() -> None:
                   show_accuracy=True, verbose=1, validation_split=0.1)
         '''
         model.fit(x_train, y_train, batch_size=batch_size, nb_epoch=nb_epoch,
-                  show_accuracy=True, verbose=1, validation_data=(x_test, y_test))
+                  verbose=1, validation_data=(x_test, y_test))
 
     score = model.evaluate(x_test, y_test, verbose=0)
     print('Score: ', score)
@@ -107,7 +107,7 @@ def get_simple_keras_solution() -> None:
     validate_holdout(model, x_holdout, y_holdout)
     save_model(model)
 
-    cache_path = os.path.join('cache', 'test.dat')
+    cache_path = os.path.join(os.path.dirname(__file__), '..', 'cache', 'test.dat')
     if not os.path.isfile(cache_path):
         test_data, test_id = load_test(img_rows, img_cols)
         cache_data((test_data, test_id), cache_path)
@@ -123,4 +123,4 @@ def get_simple_keras_solution() -> None:
     print(test_data.shape[0], 'test samples')
     predictions = model.predict(test_data, batch_size=128, verbose=1)
 
-    create_submission(predictions, test_id, score)
+    create_submission(predictions, test_id, 'keras_simple')

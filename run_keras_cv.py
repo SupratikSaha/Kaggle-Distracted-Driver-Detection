@@ -113,10 +113,10 @@ def run_cross_validation(n_folds: int = 10) -> None:
         model.add(Dense(nb_classes))
         model.add(Activation('softmax'))
 
-        model.compile(loss='categorical_crossentropy', optimizer='adadelta')
+        model.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=['accuracy'])
 
         model.fit(x_train, y_train, batch_size=batch_size, nb_epoch=nb_epoch,
-                  show_accuracy=True, verbose=1, validation_data=(x_valid, y_valid))
+                  verbose=1, validation_data=(x_valid, y_valid))
 
         predictions_valid = model.predict(x_valid, batch_size=128, verbose=1)
         score = log_loss(y_valid, predictions_valid)
