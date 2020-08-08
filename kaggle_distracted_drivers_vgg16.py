@@ -224,7 +224,7 @@ def run_cross_validation_create_models(n_folds: int = 10) -> None:
     kf = KFold(n_splits=n_folds, shuffle=True, random_state=random_state)
     num_fold = 0
     sum_score = 0
-    for train_drivers, test_drivers in kf:
+    for train_drivers, test_drivers in kf.split(train_data):
         model = vgg_16()
         unique_list_train = [unique_drivers[i] for i in train_drivers]
         x_train, y_train, train_index = copy_selected_drivers(train_data, train_target, driver_id, unique_list_train)

@@ -90,7 +90,7 @@ def run_cross_validation(n_folds: int = 10) -> None:
     y_full_test = []
     kf = KFold(n_splits=n_folds, shuffle=True, random_state=random_state)
     num_fold = 0
-    for train_index, test_index in kf:
+    for train_index, test_index in kf.split(train_data):
         num_fold += 1
         print('Start KFold number {} from {}'.format(num_fold, n_folds))
         x_train, x_valid = train_data[train_index], train_data[test_index]
