@@ -140,7 +140,7 @@ def run_cross_validation_cv_drivers(n_folds: int = 10):
     y_full_test = []
     kf = KFold(n_splits=n_folds, shuffle=True, random_state=random_state)
     num_fold = 0
-    for train_drivers, test_drivers in kf.split(train_data):
+    for train_drivers, test_drivers in kf.split(unique_drivers):
         unique_list_train = [unique_drivers[i] for i in train_drivers]
         x_train, y_train, train_index = copy_selected_drivers(train_data, train_target, driver_id, unique_list_train)
         unique_list_valid = [unique_drivers[i] for i in test_drivers]
