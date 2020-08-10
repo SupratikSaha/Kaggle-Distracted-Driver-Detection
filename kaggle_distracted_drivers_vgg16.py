@@ -154,7 +154,9 @@ def vgg_16() -> Sequential:
     model.add(Dense(4096, activation='relu'))
     model.add(Dropout(0.5))
 
-    f = h5py.File('weights/vgg16_weights.h5')
+    weight_path = os.path.join(os.path.dirname(__file__), 'weights/vgg16_weights.h5')
+    print("weight path: ", weight_path)
+    f = h5py.File(weight_path)
     for k in range(f.attrs['nb_layers']):
         if k >= len(model.layers):
             # we don't look at the last (fully-connected) layers in the saved file
@@ -267,9 +269,6 @@ def run_cross_validation_create_models(n_folds: int = 10) -> None:
     predictions_valid = get_validation_predictions(train_data, y_full_train)
 
     print('Final log_loss: {}, n_folds: {} epoch: {}'.format(score, n_folds, nb_epoch))
-    # info_string = 'loss_' + str(score) \
-    #               + '_folds_' + str(n_folds) \
-    #               + '_ep_' + str(nb_epoch)
 
     save_useful_data(predictions_valid, train_id, model, 'vgg_16')
 
@@ -324,10 +323,6 @@ def run_cross_validation_process_test(n_folds: int = 10) -> None:
         y_full_test.append(test_prediction)
 
     test_res = merge_several_folds_fast(y_full_test, n_folds)
-    # info_string = 'loss_' \
-    #               + '_r_' + str(224) \
-    #               + '_c_' + str(224) \
-    #               + '_folds_' + str(n_folds)
     suffix = 'vgg_16' + '_' + str(datetime.datetime.now().strftime("%Y-%m-%d-%H-%M"))
     cache_data((y_full_test, test_id), os.path.join(os.path.dirname(__file__), '..', "subm",
                                                     "full_array_" + suffix + ".pickle.dat"))

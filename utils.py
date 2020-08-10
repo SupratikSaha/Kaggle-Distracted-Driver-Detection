@@ -11,7 +11,6 @@ import cv2
 import datetime
 import pandas as pd
 from typing import Any, Dict, List, Tuple, Iterable
-from shutil import copy2
 from sklearn.model_selection import train_test_split
 from keras import Model
 from keras.models import model_from_json, Sequential
@@ -402,10 +401,6 @@ def save_useful_data(predictions_valid: List[float], valid_ids: List[str], model
     json_string = model.to_json()
     model_file = os.path.join(os.path.dirname(__file__), '..', 'subm', 'data', 's_' + suffix + '_model.json')
     open(model_file, 'w').write(json_string)
-    # Save code
-    # cur_code = os.path.realpath(__file__)
-    # code_file = os.path.join('subm', 'data', 's_' + suffix + '_code.py')
-    # copy2(cur_code, code_file)
 
 
 def get_validation_predictions(train_data: np.ndarray, predictions_valid: Dict[int, float]) -> List[float]:

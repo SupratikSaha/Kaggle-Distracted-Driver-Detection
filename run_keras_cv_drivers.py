@@ -157,9 +157,6 @@ def run_cross_validation_cv_drivers(n_folds: int = 10):
         model.fit(x_train, y_train, batch_size=batch_size, nb_epoch=nb_epoch,
                   verbose=1, validation_data=(x_valid, y_valid))
 
-        # score = model.evaluate(X_valid, Y_valid, show_accuracy=True, verbose=0)
-        # print('Score log_loss: ', score[0])
-
         predictions_valid = model.predict(x_valid, batch_size=128, verbose=1)
         score = log_loss(y_valid, predictions_valid)
         print('Score log_loss: ', score)
@@ -176,11 +173,6 @@ def run_cross_validation_cv_drivers(n_folds: int = 10):
     print('Final log_loss: {}, rows: {} cols: {} n_folds: {} epoch: {}'.format(score, img_rows,
                                                                                img_cols, n_folds,
                                                                                nb_epoch))
-    # info_string = 'loss_' + str(score) \
-    #               + '_r_' + str(img_rows) \
-    #               + '_c_' + str(img_cols) \
-    #               + '_folds_' + str(n_folds) \
-    #               + '_ep_' + str(nb_epoch)
 
     test_res = merge_several_folds_fast(y_full_test, n_folds)
     create_submission(test_res, test_id, 'keras_cv_drivers')

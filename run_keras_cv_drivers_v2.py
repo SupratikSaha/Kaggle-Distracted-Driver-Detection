@@ -196,11 +196,6 @@ def run_cross_validation_v2(n_folds: int = 10) -> None:
 
     print('Final log_loss: {}, rows: {} cols: {} n_folds: {} epoch: {}'.format(
         score, img_rows, img_cols, n_folds, nb_epoch))
-    # info_string = 'loss_' + str(score) \
-    #               + '_r_' + str(img_rows) \
-    #               + '_c_' + str(img_cols) \
-    #               + '_folds_' + str(n_folds) \
-    #               + '_ep_' + str(nb_epoch)
 
     test_res = merge_several_folds_fast(y_full_test, n_folds)
     create_submission(test_res, test_id, 'keras_cv_drivers_v2')
@@ -252,10 +247,6 @@ def run_single():
     y_full_test.append(test_prediction)
 
     print('Final log_loss: {}, rows: {} cols: {} epoch: {}'.format(score, img_rows, img_cols, nb_epoch))
-    # info_string = 'loss_' + str(score) \
-    #               + '_r_' + str(img_rows) \
-    #               + '_c_' + str(img_cols) \
-    #               + '_ep_' + str(nb_epoch)
 
     full_pred = model.predict(train_data, batch_size=batch_size, verbose=1)
     score = log_loss(train_target, full_pred)
