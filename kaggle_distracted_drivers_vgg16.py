@@ -56,14 +56,15 @@ def read_and_normalize_train_data(img_rows: int, img_cols: int, use_cache: int =
 
     # Shuffle experiment START !!!
     perm = permutation(len(train_target))
-    train_data = train_data[perm]
+    train_data_perm = train_data[perm]
+    del train_data
     train_target = train_target[perm]
     # Shuffle experiment END !!!
 
-    print('Train shape:', train_data.shape)
-    print(train_data.shape[0], 'train samples')
+    print('Train shape:', train_data_perm.shape)
+    print(train_data_perm.shape[0], 'train samples')
 
-    return train_data, train_target, train_id, driver_id, unique_drivers
+    return train_data_perm, train_target, train_id, driver_id, unique_drivers
 
 
 def read_and_normalize_test_data(part: int, img_rows: int, img_cols: int, use_cache: int = 0, color_type: int = 1) -> \
@@ -116,13 +117,13 @@ def vgg_16() -> Sequential:
     model.add(Convolution2D(64, 3, 3, activation='relu'))
     model.add(ZeroPadding2D((1, 1)))
     model.add(Convolution2D(64, 3, 3, activation='relu'))
-    model.add(MaxPooling2D((2, 2), stride=(2, 2)))
+    model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
     model.add(ZeroPadding2D((1, 1)))
     model.add(Convolution2D(128, 3, 3, activation='relu'))
     model.add(ZeroPadding2D((1, 1)))
     model.add(Convolution2D(128, 3, 3, activation='relu'))
-    model.add(MaxPooling2D((2, 2), stride=(2, 2)))
+    model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
     model.add(ZeroPadding2D((1, 1)))
     model.add(Convolution2D(256, 3, 3, activation='relu'))
@@ -130,7 +131,7 @@ def vgg_16() -> Sequential:
     model.add(Convolution2D(256, 3, 3, activation='relu'))
     model.add(ZeroPadding2D((1, 1)))
     model.add(Convolution2D(256, 3, 3, activation='relu'))
-    model.add(MaxPooling2D((2, 2), stride=(2, 2)))
+    model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
     model.add(ZeroPadding2D((1, 1)))
     model.add(Convolution2D(512, 3, 3, activation='relu'))
@@ -138,7 +139,7 @@ def vgg_16() -> Sequential:
     model.add(Convolution2D(512, 3, 3, activation='relu'))
     model.add(ZeroPadding2D((1, 1)))
     model.add(Convolution2D(512, 3, 3, activation='relu'))
-    model.add(MaxPooling2D((2, 2), stride=(2, 2)))
+    model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
     model.add(ZeroPadding2D((1, 1)))
     model.add(Convolution2D(512, 3, 3, activation='relu'))
@@ -146,7 +147,7 @@ def vgg_16() -> Sequential:
     model.add(Convolution2D(512, 3, 3, activation='relu'))
     model.add(ZeroPadding2D((1, 1)))
     model.add(Convolution2D(512, 3, 3, activation='relu'))
-    model.add(MaxPooling2D((2, 2), stride=(2, 2)))
+    model.add(MaxPooling2D((2, 2), strides=(2, 2)))
 
     model.add(Flatten())
     model.add(Dense(4096, activation='relu'))
