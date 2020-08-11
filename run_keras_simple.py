@@ -95,10 +95,6 @@ def get_simple_keras_solution() -> None:
 
         model.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=['accuracy'])
 
-        '''
-        model.fit(train_data, train_target, batch_size=batch_size, nb_epoch=nb_epoch,
-                  show_accuracy=True, verbose=1, validation_split=0.1)
-        '''
         model.fit(x_train, y_train, batch_size=batch_size, nb_epoch=nb_epoch,
                   verbose=1, validation_data=(x_test, y_test))
 
