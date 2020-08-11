@@ -156,15 +156,19 @@ def vgg_16() -> Sequential:
     model.add(Dropout(0.5))
 
     weight_path = os.path.join(os.path.dirname(__file__), 'weights/vgg16_weights.h5')
-    print("weight path: ", weight_path)
     f = h5py.File(weight_path)
+
     for k in range(f.attrs['nb_layers']):
         if k >= len(model.layers):
             # we don't look at the last (fully-connected) layers in the saved file
             break
         g = f['layer_{}'.format(k)]
         weights = [g['param_{}'.format(p)] for p in range(g.attrs['nb_params'])]
-        model.layers[k].set_weights(weights)
+        if weights and k != 32 and k != 34:
+            weights[0] = np.transpose(np.array(weights[0])[:, :, ::-1, ::-1], (2, 3, 1, 0))
+            model.layers[k].set_weights(weights)
+        elif k == 32 or k == 34:
+            model.layers[k].set_weights(weights)
     f.close()
     print('Model loaded.')
 

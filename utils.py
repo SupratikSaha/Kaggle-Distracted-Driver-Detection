@@ -371,11 +371,12 @@ def copy_selected_drivers(train_data: np.ndarray, train_target: np.ndarray,
             data.append(train_data[i])
             target.append(train_target[i])
             index.append(i)
-    data = np.array(data, dtype=np.float32)
+    data1 = np.array(data, dtype=np.float32)
+    del data
     target = np.array(target, dtype=np.float32)
     index = np.array(index, dtype=np.uint32)
 
-    return data, target, index
+    return data1, target, index
 
 
 def save_useful_data(predictions_valid: List[float], valid_ids: List[str], model: Sequential,
