@@ -1,0 +1,16 @@
+datetime
+glob
+h5py
+keras==2.2.4
+math
+numpy
+opencv-python
+os
+pandas
+pickle
+random
+sklearn
+time
+tensorflow==1.13.1
+typing
+warnings
