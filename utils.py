@@ -154,7 +154,7 @@ def load_test_vgg(part: int, img_rows: int, img_cols: int, color_type=1, mode='n
         Returns:
             Tuple of resized images and image name
     """
-    path = os.path.join(os.path.dirname(__file__), '..', 'input', 'test', '*.jpg')
+    path = os.path.join(os.path.dirname(__file__), '..', 'input', 'imgs', 'test', '*.jpg')
     files = sorted(glob.glob(path))
     ch = split_list(files, 5)
 
