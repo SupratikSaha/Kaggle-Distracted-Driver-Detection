@@ -1,11 +1,16 @@
+# Load data from kaggle
 cd /home/ec2-user/SageMaker/input/
+
+## Get API key from kaggle website and upload to AWS
 cp kaggle.json /home/ec2-user/.kaggle
 
+## Download data from kaggle
 pip install kaggle
 
 cd /tmp
 kaggle competitions download -c state-farm-distracted-driver-detection
 
+## Unzip downloaded data
 pip install zipfile36
 
 python3
@@ -13,7 +18,11 @@ from zipfile import ZipFile
 with ZipFile('state-farm-distracted-driver-detection.zip', 'r') as zf:
 	zf.extractall('/home/ec2-user/SageMaker/input/')
 
+# Install required libraries
 pip install keras==2.2.4
 pip install tensorflow-gpu==1.13.1
 pip install sklearn
 pip install datetime
+
+# Monitor GPU Utilization on AWS
+nvidia-smi
