@@ -14,7 +14,6 @@ with ZipFile('state-farm-distracted-driver-detection.zip', 'r') as zf:
 	zf.extractall('/home/ec2-user/SageMaker/input/')
 
 pip install keras==2.2.4
-pip install tensorflow==1.13.1
+pip install tensorflow-gpu==1.13.1
 pip install sklearn
-pip install opencv-python
-pip install datetime	
+pip install datetime
