@@ -6,10 +6,10 @@ https://www.kaggle.com/c/state-farm-distracted-driver-detection
 
 ## Submission Details
 
-My submission had a log loss score of 0.22855 on the private leader board 
+My submission had a log loss score of 0.22855 on the private leader board
 and 0.23893 on the public leader board
 
-On the private leader board this translates to a rank of 105 out of 1438 submissions 
+On the private leader board this translates to a rank of 105 out of 1438 submissions
 
 This ranks in about top 7% of submissions
 
@@ -32,7 +32,7 @@ tensorflow-gpu==1.13.1
 ## Folders needed to run code
 
 - Create folder named weights inside the project directory
-- Create folders named cache and input one step above the project directory 
+- Create folders named cache and input one step above the project directory
 
 ## Download Competition Data
 
