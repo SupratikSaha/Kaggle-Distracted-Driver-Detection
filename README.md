@@ -44,8 +44,8 @@ Download the glove vector into project directory [Pre-Trained Glove Word Vector]
  
 ## Running Code
 
-- The repository hosts 5 separate models all hosted in the \_\_main__.py file.
-- It is advised to run the code in pieces.
+- The repository hosts 5 separate models all hosted in the \_\_main__.py file
+- It is advised to run the code in pieces
 - Each model has its individual code file that is capable of producing independent submissions
 - The final submissions use the kaggle_distracted_drivers_vgg16.py file that uses pretrained vgg_16 weights
 - For reference, it took me about a total of 0.5 days on my HP Spectre i5 to run each of first 4 simple models
