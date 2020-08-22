@@ -1,4 +1,4 @@
-# Kaggle - Distracted Driver Detection - Model log loss - 0.22855 within Top 7% Private Leader Board
+# Kaggle - Distracted Driver Detection - Model log loss - 0.22855
 
 ## Kaggle Competition link
 
@@ -6,12 +6,8 @@ https://www.kaggle.com/c/state-farm-distracted-driver-detection
 
 ## Submission Details
 
-My submission had a log loss score of 0.22855 on the private leader board
+The predicted submission had a log loss score of 0.22855 on the private leader board
 and 0.23893 on the public leader board
-
-On the private leader board this translates to a rank of 105 out of 1438 submissions
-
-This ranks in within top 7% of submissions
 
 ![My Submission](images/kaggle_submission_score.jpg)
 
