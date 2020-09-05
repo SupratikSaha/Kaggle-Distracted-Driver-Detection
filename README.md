@@ -15,14 +15,14 @@ and 0.23893 on the public leader board
 
 ## Packages to be installed
 
-Following packages specified in requirements.txt file need to be installed
-h5py==2.10.0
-keras==2.2.4
-numpy==1.16.2
-opencv-python==4.1.1
-pandas==0.24.2
-scikit-learn==0.22.2.post1
-tensorflow-gpu==1.13.1
+Following packages specified in requirements.txt file need to be installed - 
+h5py, 
+keras, 
+numpy, 
+opencv-python, 
+pandas, 
+scikit-learn and 
+tensorflow-gpu
 
 ## Folders needed to run code
 
