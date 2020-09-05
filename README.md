@@ -9,8 +9,6 @@ https://www.kaggle.com/c/state-farm-distracted-driver-detection
 The predicted submission had a log loss score of 0.22855 on the private leader board
 and 0.23893 on the public leader board
 
-![My Submission](images/kaggle_submission_score.jpg)
-
 # Steps to run project code
 
 ## Packages to be installed
