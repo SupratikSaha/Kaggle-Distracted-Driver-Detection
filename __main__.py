@@ -2,11 +2,11 @@
 
 import os
 from keras import backend
-from run_keras_simple import get_simple_keras_solution
-from run_keras_cv import run_cross_validation
-from run_keras_cv_drivers import run_cross_validation_cv_drivers
-from run_keras_cv_drivers_v2 import run_cross_validation_v2
-from kaggle_distracted_drivers_vgg16 import run_cross_validation_create_models, run_cross_validation_process_test
+from convolution_quick import get_simple_keras_solution
+from convolution_cross_validation import run_cross_validation
+from convolution_drivers1 import run_cross_validation_cv_drivers
+from convolution_drivers2 import run_cross_validation_v2
+from convolution_vgg16 import run_cross_validation_create_models, run_cross_validation_process_test
 
 backend.set_image_dim_ordering('th')
 get_simple_keras_solution()
